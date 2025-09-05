@@ -79,7 +79,19 @@ const loginUser = async (req, res) => {
 };
 
 const adminLogin = async (req, res) => {
-  res.json({ msg: "Admin Login API working...." });
+  try {
+    const { email, password } = req.body;
+
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      const token = jwt.sign(email + password, process.env.JWT_SECRETE);
+      res.json({ success: true, token });
+    }
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
 };
 
 export { loginUser, registerUser, adminLogin };
